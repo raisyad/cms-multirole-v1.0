@@ -36,8 +36,19 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function create() {
         $permissions = Permission::orderBy('name', 'ASC')->get();
+
+        // Mengelompokkan permissions berdasarkan kategori
+        $groupedPermissions = $permissions->groupBy(function ($permission) {
+            if (str_contains($permission->name, 'articles')) return 'Articles';
+            if (str_contains($permission->name, 'permissions')) return 'Permissions';
+            if (str_contains($permission->name, 'roles')) return 'Roles';
+            if (str_contains($permission->name, 'users')) return 'Users';
+            return 'Others';
+        });
+
         return view('roles.create', [
             'permissions' => $permissions,
+            'groupedPermissions' => $groupedPermissions,
         ]); 
     }
 
@@ -72,7 +83,17 @@ class RoleController extends Controller implements HasMiddleware
         $hasPermissions = $role->permissions->pluck('name');
         $permissions = Permission::orderBy('name', 'ASC')->get();
 
+        // Mengelompokkan permissions berdasarkan kategori
+        $groupedPermissions = $permissions->groupBy(function ($permission) {
+            if (str_contains($permission->name, 'articles')) return 'Articles';
+            if (str_contains($permission->name, 'permissions')) return 'Permissions';
+            if (str_contains($permission->name, 'roles')) return 'Roles';
+            if (str_contains($permission->name, 'users')) return 'Users';
+            return 'Others';
+        });
+
         return view('roles.edit', [
+            'groupedPermissions' => $groupedPermissions,
             'permissions' => $permissions,
             'hasPermissions' => $hasPermissions,
             'role' => $role,

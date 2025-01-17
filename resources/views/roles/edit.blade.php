@@ -23,7 +23,7 @@
                                 @enderror
                             </div>
 
-                            <div class="grid grid-cols-4 mb-3">
+                            {{-- <div class="grid grid-cols-4 mb-3">
                                 @if ($permissions->isNotEmpty())
                                     @foreach ($permissions as $permission)
                                         <div class="mt-3">
@@ -32,6 +32,32 @@
                                         </div>
                                     @endforeach
                                 @endif
+                            </div> --}}
+
+                            <!-- Permissions -->
+                            <div class="grid grid-cols-1 gap-6">
+                                @foreach ($groupedPermissions as $category => $permissions)
+                                    <div class="mb-6">
+                                        <!-- Category Title -->
+                                        <h3 class="text-lg font-semibold text-gray-800">{{ $category }}</h3>
+                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                                            @foreach ($permissions as $permission)
+                                                <div class="flex items-center">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        id="permission-{{ $permission->id }}" 
+                                                        class="rounded" 
+                                                        name="permission[]" 
+                                                        value="{{ $permission->name }}" 
+                                                        {{ $hasPermissions->contains($permission->name) ? 'checked' : '' }}>
+                                                    <label for="permission-{{ $permission->id }}" class="ml-2 text-sm text-gray-600">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                             <button class="bg-slate-700 hover:bg-slate-500 text-sm rounded-md px-5 text-white py-3">Update</button>
                         </div>
